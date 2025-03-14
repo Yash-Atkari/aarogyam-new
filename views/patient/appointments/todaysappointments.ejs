@@ -1,0 +1,133 @@
+<%- layout("./layouts/patientboilerplate") %>
+
+<style>
+    body { background-color: #f8f9fa; }
+    .appointments-container {
+        max-width: 95%;
+        /* margin: auto; */
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .appointment-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        border-radius: 10px;
+        background: #fff;
+        margin-bottom: 10px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .appointment-header {
+        font-size: 20px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .doctor-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .doctor-info img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+    .status-confirm { color: green; font-weight: bold; }
+    .status-cancelled { color: red; font-weight: bold; }
+    .status-pending { color: orange; font-weight: bold; }
+    .actions i {
+        cursor: pointer;
+        font-size: 1.2rem;
+        margin-right: 10px;
+    }
+</style>
+
+<div class="container">
+    <div class="appointment-header">
+        <h2>Appointments</h2>
+    </div>
+    <div class="appointments-container mt-3">
+        <h5>Today's Appointments</h5>
+
+        <% if (appointments && appointments.length > 0) { %> 
+            <% appointments.forEach(appointment => { %>
+                <div class="appointment-card">
+                    <div class="doctor-info">
+                        <div>
+                            <strong><%= appointment.doctorId.username %></strong> <br>
+                            <img src="<%= appointment.doctorId.profile %>" alt="Doctor Image">
+                        </div>
+                        <div>
+                            <strong>Specialization</strong> <br>
+                            <small><%= appointment.doctorId.specialization %></small>
+                        </div>
+                    </div>
+                    <div>
+                        <strong>Date</strong> <br>
+                        <small><%= appointment.date.toString().split(" ").slice(0, 4).join(" ") %></small>
+                    </div>
+                    <div>
+                        <strong>Time</strong> <br>
+                        <small><%= appointment.timeSlot %></small>
+                    </div>
+                    <div>
+                        <strong>Reason</strong> <br>
+                        <small><%= appointment.reason %></small>
+                    </div>
+                    <div>
+                        <strong>Contact</strong> <br>
+                        <small><%= appointment.doctorId.phone %></small>
+                    </div>
+                    <div>
+                        <strong>Status</strong> <br>
+                        <small><%= appointment.status %></small>
+                    </div>
+                    <div>
+                        <strong>Location</strong> <br>
+                        <small><%= appointment.doctorId.hospital %></small>
+                    </div>
+                    <div class="actions">
+                        <strong>Action</strong> <br>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal" onclick="setAppointmentId('<%= appointment._id %>')">Cancel</button>                                      
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            No appointments found.
+        <% } %>
+    </div>
+</div>
+
+<!-- Cancel Confirmation Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cancelModalLabel">Confirm Cancellation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to cancel this appointment?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+          <form id="cancelForm" method="POST">
+            <button type="submit" class="btn btn-danger">Yes, Cancel</button>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script>
+    function setAppointmentId(appointmentId) {
+      document.getElementById("cancelForm").action = `/patient/todaysappointments/cancel/${appointmentId}?_method=DELETE`;
+    }
+</script>
