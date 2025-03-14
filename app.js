@@ -280,6 +280,35 @@ app.delete("/patient/todaysappointments/cancel/:id", async (req, res) => {
   }
 });
 
+app.get("/patient/appointments", async (req, res) => {
+  try {
+      const { search, date, status, timeSlot } = req.query;
+      let filter = {};
+
+      // Apply direct filters first
+      if (date) filter.date = date;
+      if (status) filter.status = status;
+      if (timeSlot) filter.timeSlot = timeSlot;
+
+      // Fetch appointments with populated doctor details
+      let appointments = await Appointment.find(filter).populate("doctorId");
+
+      // Apply search filter after population (for doctor name)
+      if (search) {
+          appointments = appointments.filter(appointment =>
+              appointment.doctorId.username.toLowerCase().includes(search.toLowerCase()) ||
+              appointment.reason.toLowerCase().includes(search.toLowerCase()) ||
+              appointment.disease.toLowerCase().includes(search.toLowerCase())
+          );
+      }
+
+      res.render("patient/appointments/todaysappointments", { appointments });
+  } catch (error) {
+      console.error("Error fetching appointments:", error);
+      res.status(500).send("Internal Server Error");
+  }
+});
+
 app.get("/patient/bookappointment", async (req, res) => {
   try {
     const doctors = await Doctor.find();

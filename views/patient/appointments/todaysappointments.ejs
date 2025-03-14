@@ -3,7 +3,6 @@
 <style>
     body { background-color: #f8f9fa; }
     .appointments-container {
-        max-width: 95%;
         /* margin: auto; */
         background: white;
         padding: 20px;
@@ -53,6 +52,42 @@
     <div class="appointment-header">
         <h2>Appointments</h2>
     </div>
+
+    <!-- Search and Filter Section -->
+    <div class="card p-3 mb-3 filter-container">
+        <form id="filterForm" method="GET" action="/patient/appointments">
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="search" placeholder="Search by Doctor, Reason, Disease">
+                </div>
+                <div class="col-md-2">
+                    <input type="date" class="form-control" name="date">
+                </div>
+                <div class="col-md-2">
+                    <select class="form-control" name="status">
+                        <option value="">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-control" name="timeSlot">
+                        <option value="">All Time Slots</option>
+                        <option value="09:00-09:30">09:00 - 09:30 AM</option>
+                        <option value="09:30-10:00">09:30 - 10:00 AM</option>
+                        <option value="10:00-10:30">10:00 - 10:30 AM</option>
+                        <option value="10:30-11:00">10:30 - 11:00 AM</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <div class="appointments-container mt-3">
         <h5>Today's Appointments</h5>
 
