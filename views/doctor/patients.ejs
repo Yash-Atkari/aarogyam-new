@@ -24,7 +24,7 @@
         transition: 0.3s;
         padding: 1rem;
         position: relative;
-        z-index: -1;
+        z-index: 1;
     }
     .card:hover {
         transform: translateY(-5px);
@@ -86,7 +86,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="submitCertificate()">Generate PDF</button>
+                <a type="button" class="btn btn-primary" onclick="submitCertificate()">Generate PDF</a>
             </div>
         </div>
     </div>
